@@ -1,11 +1,51 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
+
+func (app *App) createDwmXsession() {
+	p := "/usr/share/xsessions/dwm.desktop"
+	content := `[Desktop Entry]
+Name=dwm
+Comment=dynamic window manager
+Exec=dwm
+Icon=dwm
+Type=Application
+`
+
+	xsessionsDir := filepath.Dir(p)
+	_, err := os.Stat(xsessionsDir)
+	if os.IsNotExist(err) {
+		cmd := exec.Command("sudo", "mkdir", "/usr/share/xsessions/")
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		err = cmd.Run()
+		if err != nil {
+			app.logger.Printf("failed to create xsessions directory: %s\n", err)
+			return
+		}
+		app.logger.Printf("xsessions directory %s created successfully\n", xsessionsDir)
+	}
+
+	cmd := exec.Command("sudo", "sh", "-c", fmt.Sprintf(`echo '%s' | sudo tee %s > /dev/null`, content, p))
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+
+	err = cmd.Run()
+	if err != nil {
+		app.logger.Printf("failed to create desktop entry: %s\n", err)
+		return
+	}
+
+	app.logger.Printf("file %s created successfully\n", p)
+}
 
 func (app *App) setupWindowManager() {
 	srcDir := filepath.Join(app.runningDir, "arch-dotfiles")
@@ -48,4 +88,6 @@ func (app *App) executeMakeCleanInstall(dir string) {
 	if err != nil {
 		log.Fatalf("failed to change back to original directory: %s\n", err.Error())
 	}
+
+	app.createDwmXsession()
 }
