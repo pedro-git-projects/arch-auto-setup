@@ -50,6 +50,7 @@ func New() *App {
 }
 
 func (app *App) Run() {
+	app.enableTouchpad()
 	err := app.cloneYay()
 	if err != nil {
 		app.logger.Fatal(err.Error())
