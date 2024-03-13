@@ -1,11 +1,14 @@
 package app
 
 import (
+	"os"
 	"os/exec"
 )
 
 func (app *App) cloneRepo(repo string) error {
 	cmd := exec.Command("git", "clone", repo)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	app.logger.Printf("cloning repo: %s\n", repo)
 	return cmd.Run()
 }

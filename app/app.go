@@ -8,12 +8,14 @@ import (
 )
 
 type App struct {
-	logger     *log.Logger
-	repos      map[string]string
-	homeDir    string
-	runningDir string
-	whoami     string
-	zsh        string
+	logger       *log.Logger
+	repos        map[string]string
+	homeDir      string
+	runningDir   string
+	sddmDir      string
+	sddmThemeDir string
+	whoami       string
+	zsh          string
 }
 
 func New() *App {
@@ -34,17 +36,20 @@ func New() *App {
 	whoami := user.Username
 
 	return &App{
-		logger:     log.New(os.Stdout, "==> ", log.Ldate|log.Ltime),
-		repos:      repos,
-		homeDir:    os.Getenv("HOME"),
-		runningDir: runningDir,
-		whoami:     whoami,
-		zsh:        "/usr/bin/zsh",
+		logger:       log.New(os.Stdout, "==> ", log.Ldate|log.Ltime),
+		repos:        repos,
+		homeDir:      os.Getenv("HOME"),
+		runningDir:   runningDir,
+		sddmDir:      "/usr/lib/sddm/sddm.conf.d",
+		sddmThemeDir: "/usr/share/sddm/themes",
+		whoami:       whoami,
+		zsh:          "/usr/bin/zsh",
 	}
 }
 
 func (app *App) Run() {
 	app.cloneConfig()
 	app.setupWindowManager()
-	app.setupShell()
+	// app.setupShell()
+	// app.setupDisplayManager()
 }
