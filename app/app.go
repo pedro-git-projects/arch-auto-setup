@@ -63,6 +63,7 @@ func (app *App) Run() {
 	if err != nil {
 		app.logger.Fatal(err.Error())
 	}
+	app.setupScripts()
 	app.setupWindowManager()
 	app.setupShell()
 	app.setupDisplayManager()
