@@ -10,6 +10,7 @@ func (app *App) chsh() {
 	cmd := exec.Command("chsh", "-s", app.zsh, app.whoami)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
 	app.logger.Printf("changing shell for user %s to %s\n", app.whoami, app.zsh)
 	err := cmd.Run()
 	if err != nil {
