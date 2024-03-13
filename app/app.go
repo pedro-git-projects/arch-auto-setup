@@ -22,6 +22,7 @@ func New() *App {
 	repos := map[string]string{
 		"config": "https://github.com/pedro-git-projects/arch-dotfiles",
 		"yay":    "https://aur.archlinux.org/yay.git",
+		"nvim":   "https://github.com/pedro-git-projects/nvim-dotfiles",
 	}
 
 	p, err := os.Executable()
@@ -49,10 +50,21 @@ func New() *App {
 }
 
 func (app *App) Run() {
-	// app.cloneConfig()
-	//	app.cloneYay()
-	//	app.setupYay()
-	// app.setupWindowManager()
-	// app.setupShell()
-	// app.setupDisplayManager()
+	err := app.cloneConfig()
+	if err != nil {
+		app.logger.Fatal(err.Error())
+	}
+	err = app.cloneYay()
+	if err != nil {
+		app.logger.Fatal(err.Error())
+	}
+	err = app.cloneNvim()
+	if err != nil {
+		app.logger.Fatal(err.Error())
+	}
+	app.setupNvim()
+	app.setupYay()
+	app.setupWindowManager()
+	app.setupShell()
+	app.setupDisplayManager()
 }

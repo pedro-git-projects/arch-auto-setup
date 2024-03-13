@@ -2,3 +2,4 @@ arch-auto-setup
 arch-dotfiles
 tasks
 yay
+nvim-dotfiles
