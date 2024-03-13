@@ -21,6 +21,7 @@ type App struct {
 func New() *App {
 	repos := map[string]string{
 		"config": "https://github.com/pedro-git-projects/arch-dotfiles",
+		"yay":    "https://aur.archlinux.org/yay.git",
 	}
 
 	p, err := os.Executable()
@@ -48,8 +49,10 @@ func New() *App {
 }
 
 func (app *App) Run() {
-	app.cloneConfig()
-	app.setupWindowManager()
+	// app.cloneConfig()
+	//	app.cloneYay()
+	//	app.setupYay()
+	// app.setupWindowManager()
 	// app.setupShell()
 	// app.setupDisplayManager()
 }
