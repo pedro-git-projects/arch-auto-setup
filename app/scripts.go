@@ -1,11 +1,23 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
+
+func (app *App) symlinkScript(scriptPath, symlinkName string) {
+	cmd := exec.Command("sudo", "ln", "-s", scriptPath, fmt.Sprintf("/usr/local/bin/%s", symlinkName))
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		app.logger.Fatalf("failed to symlink script %s\n", scriptPath)
+	}
+}
 
 func (app *App) createScriptsFolderIfNotExists(path string) {
 	_, err := os.Stat(path)
@@ -42,8 +54,14 @@ func (app *App) makeExecutable(dir, filename string) {
 
 func (app *App) setupScripts() {
 	srcDir := filepath.Join(app.runningDir, "arch-dotfiles")
+
 	target := filepath.Join(app.homeDir, ".scripts")
 	app.createScriptsFolderIfNotExists(target)
+
 	app.mvDir(filepath.Join(srcDir, "scripts", "kbd.sh"), target)
 	app.makeExecutable(target, "kbd.sh")
+
+	app.mvDir(filepath.Join(srcDir, "scripts", "restore_wallpaper.sh"), target)
+	app.makeExecutable(target, "restore_wallpaper.sh")
+	app.symlinkScript(filepath.Join(target, "restore_wallpaper.sh"), "restore_wallpaper")
 }
