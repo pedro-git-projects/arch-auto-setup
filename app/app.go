@@ -50,21 +50,25 @@ func New() *App {
 }
 
 func (app *App) Run() {
-	err := app.cloneConfig()
+	err := app.cloneYay()
 	if err != nil {
 		app.logger.Fatal(err.Error())
 	}
-	err = app.cloneYay()
+	app.setupYay()
+
+	app.installPackages()
+
+	err = app.cloneConfig()
 	if err != nil {
 		app.logger.Fatal(err.Error())
 	}
+	app.setupWindowManager()
+	app.setupShell()
+	app.setupDisplayManager()
+
 	err = app.cloneNvim()
 	if err != nil {
 		app.logger.Fatal(err.Error())
 	}
 	app.setupNvim()
-	app.setupYay()
-	app.setupWindowManager()
-	app.setupShell()
-	app.setupDisplayManager()
 }
